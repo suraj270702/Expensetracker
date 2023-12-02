@@ -5,7 +5,8 @@ import { createSlice } from '@reduxjs/toolkit'
 export const counterSlice = createSlice({
   name: 'orders',
   initialState: {
-    order: [],
+    activeState: false,
+    value : 0
   },
   reducers: {
     add: (state,action) => {
@@ -14,10 +15,10 @@ export const counterSlice = createSlice({
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes.
       // Also, no return statement is required from these functions.
-     return [...state.value,action.payload]
+     state.activeState = !state.activeState
     },
     decrement: (state) => {
-      state.value -= 1
+      state.activeState = false
     },
     incrementByAmount: (state, action) => {
       state.value += action.payload

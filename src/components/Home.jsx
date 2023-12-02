@@ -15,7 +15,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
 import Stack from "@mui/material/Stack";
 
-const Home = ({ setActive }) => {
+const Home = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const storedOrderData = localStorage.getItem("ordersData");
   const initialOrder = storedOrderData ? JSON.parse(storedOrderData) : [];
@@ -71,7 +71,7 @@ const Home = ({ setActive }) => {
       date:
         newDate.getDate() +
         "/" +
-        newDate.getMonth() +
+        (newDate.getMonth() + 1)+
         "/" +
         newDate.getFullYear(),
       qty: quantity,
@@ -131,6 +131,7 @@ const Home = ({ setActive }) => {
   };
 
   const dispatch = useDispatch();
+  
 
   let day = currentDate.getDate();
 
@@ -146,7 +147,7 @@ const Home = ({ setActive }) => {
     <>
       <div
         className="px-2 md:px-4 md:py-6 mt-4 md:mt-10 md:ml-[350px]"
-        onClick={() => setActive(false)}
+        onClick={() => dispatch(decrement())}
       >
         <div className="px-4 py-4 md:px-6 md:py-6 w-full md:w-[1050px] bg-[#fff] min-h-[50px] rounded-[10px] shadow-sm flex items-center justify-between mb-10">
           <div className="flex items-center gap-4">
@@ -172,7 +173,7 @@ const Home = ({ setActive }) => {
                 <div className="md:w-[500px]  h-full w-full rounded-[10px] shadow-lg bg-[#FFF] p-4 md:p-8">
                   <div>
                     <TextField
-                      id="outlined-basic"
+                      id="Quantity"
                       label="Quantity"
                       variant="outlined"
                       sx={{
@@ -221,8 +222,8 @@ const Home = ({ setActive }) => {
                     </h1>
 
                     <TextField
-                      id="outlined-basic"
-                      label="Payment AMount"
+                      id="Balance Amount"
+                      label="Payment Aount"
                       variant="outlined"
                       sx={{
                         width: "100%",

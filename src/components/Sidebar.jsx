@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
+import { add, decrement } from "../app/features/counter";
 
 import Home from "./Home";
+import { Outlet } from "react-router-dom";
 
 const Sidebar = () => {
   const [active, setActive] = useState(false);
+
+  const dispatch = useDispatch()
+
+  const activeState = useSelector((state)=>state.counter.activeState)
   
   const navigation = [
     {
@@ -99,7 +106,7 @@ const Sidebar = () => {
     <>
       <div className="flex flex-col md:flex-row">
         <div className="p-6 border-b border-gray-300 md:hidden flex justify-between items-center">
-          <div onClick={() => setActive(!active)}>
+          <div onClick={()=>dispatch(add())}>
             <svg viewBox="0 0 100 80" width="40" height="40">
               <rect width="100" height="20" rx="10"></rect>
               <rect y="30" width="100" height="20" rx="10"></rect>
@@ -116,8 +123,8 @@ const Sidebar = () => {
 
         <div
           className={` w-3/4 md:w-[333px] h-screen fixed top-0 left-0 md:translate-x-0 ${
-            active ? "translate-x-0" : "-translate-x-full"
-          } transition ease-in-out bg-[#fff] duration-300 px-6 md:px-16`}
+            activeState ? "translate-x-0" : "-translate-x-full"
+          } transition ease-in-out bg-[#fff] duration-300 px-6 md:px-16 z-40`}
         >
           <div className="flex flex-col items-start">
             <div className="flex items-center gap-3 mt-4">
@@ -150,7 +157,7 @@ const Sidebar = () => {
           </div>
         </div>
 
-        <Home setActive={setActive}/>
+       <Outlet />
       </div>
     </>
   );
