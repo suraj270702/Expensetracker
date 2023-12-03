@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar'
 import { createBrowserRouter,createRoutesFromElements,Route,RouterProvider } from 'react-router-dom'
 import Home from './components/Home'
 import OrdersTable from './components/OrdersTable'
+import Dashboard from './components/Dashboard'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -22,6 +23,10 @@ function App() {
         {
           index : true,
           element : <Home />
+        },
+        {
+          path:"dashboard",
+          element : <Dashboard />
         }
       ]
     }

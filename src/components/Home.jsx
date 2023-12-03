@@ -51,6 +51,7 @@ const Home = () => {
     "Online Shopping",
     "Chakki Atta",
     "Petrol",
+    "Food"
   ];
 
   const paymentOptions = ["Cash", "Online", "Atm"];
