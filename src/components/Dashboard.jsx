@@ -3,8 +3,8 @@ import { FcMoneyTransfer } from "react-icons/fc";
 
 import { useDispatch } from "react-redux";
 import { decrement } from "../app/features/counter";
-import { Chart as ChartJS,Tooltip,Legend,ArcElement } from "chart.js";
-import { Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS,Tooltip,Legend,ArcElement,BarElement,Title,CategoryScale,LinearScale } from "chart.js";
+import { Bar, Doughnut } from 'react-chartjs-2';
 
 
 const Dashboard = () => {
@@ -29,17 +29,60 @@ const Dashboard = () => {
           'rgba(255, 159, 64, 0.2)',
           'rgba(255, 192, 64, 0.2)',
   ]
-
+  
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ]
   
 
   const [categoryData,setCategoryData] = useState([])
   const [categoryExpense,setCategoryExpense] = useState([])
+  const [ordersByMonths,setOrdersByMonths] = useState([])
+  const [month,setMonth] = useState([])
+  const [amount,setAmount] = useState([])
 
   useEffect(()=>{
     let profitData = ordersData.reduce((acc,i)=>acc+i.payment,0)
     setProfit(profitData)
     let totalOrdersData = ordersData.reduce((acc,i)=>acc+parseInt(i.qty),0)
     setTotalOrders(totalOrdersData)
+    let ordersDataByMonths = {
+
+    }
+    ordersData.forEach((item)=>{
+      if(!ordersDataByMonths[item.month]){
+        ordersDataByMonths[item.month]=item.payment
+      }
+      else{
+        ordersDataByMonths[item.month]+=item.payment
+      }
+    })
+
+    let ordersArrayByMonths = Object.entries(ordersDataByMonths).map(([month,total])=>({
+      month:month,
+      total:total
+    }))
+
+    const sortedOrdersArray = [...ordersArrayByMonths].sort((a, b) => a.month - b.month);
+    setOrdersByMonths(sortedOrdersArray)
+    const monthsData = sortedOrdersArray.map((item)=>months[parseInt(item.month)-1]) 
+    const data = [...monthsData]
+    setMonth(data)
+    const amountByMonth = sortedOrdersArray.map((item)=>item.total)
+    const amountData = [...amountByMonth]
+    setAmount(()=>[...amountData])
+    console.log(amount)
   },[ordersData])
 
   useEffect(()=>{
@@ -77,11 +120,15 @@ const Dashboard = () => {
   ChartJS.register(
     ArcElement,
     Tooltip,
-    Legend
+    Legend,
+    CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
   )
-  //console.log(totalExpenseAmount)
+  console.log(month)
 
-  console.log(categoryExpense)
+  //console.log(categoryExpense)
 
    const data = {
     labels: categoryData,
@@ -106,6 +153,32 @@ const Dashboard = () => {
           'rgba(255, 159, 64, 1)',
         ],
         borderWidth: 1,
+      },
+    ],
+  };
+
+   const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top" ,
+      },
+      title: {
+        display: true,
+        text: "2023 Orders Chart",
+      },
+    },
+  };
+  
+  const labels = ["January", "February", "March", "April", "May", "June", "July"];
+  
+   const barChartData = {
+    labels:month,
+    datasets: [
+      {
+        label: "Orders Report",
+        data: amount,
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
     ],
   };
@@ -171,6 +244,11 @@ const Dashboard = () => {
             <div className="w-full md:w-[75%]">
              <Doughnut data={data}/>
             </div>
+          </div>
+          <div className="w-full h-full md:col-span-3 md:row-span-2 rounded-md bg-[white] shadow-md p-4 md:px-6 md:py-4 md:flex md:justify-center md:items-center">
+<div className="w-full md:w-[100%] ">
+<Bar options={options} data={barChartData} />;
+</div>
           </div>
         </div>
       </div>
