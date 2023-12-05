@@ -7,6 +7,7 @@ import { createBrowserRouter,createRoutesFromElements,Route,RouterProvider } fro
 import Home from './components/Home'
 import OrdersTable from './components/OrdersTable'
 import Dashboard from './components/Dashboard'
+import Transaction from './components/Transaction'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -27,6 +28,10 @@ function App() {
         {
           path:"dashboard",
           element : <Dashboard />
+        },
+        {
+          path : "transactions",
+          element:<Transaction />
         }
       ]
     }
