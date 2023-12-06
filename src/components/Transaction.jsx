@@ -16,37 +16,38 @@ const Transaction = () => {
     initialTransactionsData
   );
   const [filterData, setFilterData] = useState(transactionData);
-  const [page,setPage] = useState(0)
-  const [pageSize,setPageSize] = useState(Math.ceil(filterData.length/10))
-  useEffect(()=>{
-    let filteredData = transactionData.filter((item)=>item.year===yearFilter && item.month === monthFilter )
-    setPageSize(Math.ceil(filteredData.length/10))
-    setFilterData(filteredData)
-  },[monthFilter,yearFilter])
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(Math.ceil(filterData.length / 10));
+  useEffect(() => {
+    let filteredData = transactionData.filter(
+      (item) => item.year === yearFilter && item.month === monthFilter
+    );
+    setPageSize(Math.ceil(filteredData.length / 10));
+    setFilterData(filteredData);
+  }, [monthFilter, yearFilter]);
 
-  useEffect(()=>{
-    let start = page * 10
-    let end = start+10
-   let paginationData = transactionData.slice(start,end)
-   setFilterData(paginationData)
-   //console.log(paginationData)
-  },[page])
+  useEffect(() => {
+    let start = page * 10;
+    let end = start + 10;
+    let paginationData = transactionData.slice(start, end);
+    setFilterData(paginationData);
+    //console.log(paginationData)
+  }, [page]);
 
-  const handlePrev=()=>{
-    setPage((prev)=>Math.max(prev-1,0))
-    console.log("previous clicked")
-  }
+  const handlePrev = () => {
+    setPage((prev) => Math.max(prev - 1, 0));
+    console.log("previous clicked");
+  };
 
-  const handleNext=()=>{
-    setPage((prev)=>Math.max(prev+1,pageSize-1))
-    console.log("Next Clicked")
-  }
+  const handleNext = () => {
+    setPage((prev) => Math.max(prev + 1, pageSize - 1));
+    console.log("Next Clicked");
+  };
 
-
-  const handlePage =(index)=>{
-    setPage(index)
-  }
- // console.log(yearFilter)
+  const handlePage = (index) => {
+    setPage(index);
+  };
+  // console.log(yearFilter)
   return (
     <>
       <div className="md:ml-[350px] px-3 md:px-6 md:py-10">
@@ -60,7 +61,7 @@ const Transaction = () => {
                   id="demo-simple-select"
                   value={monthFilter}
                   label="Month"
-                  onChange={(e)=>setMonthFilter(e.target.value)}
+                  onChange={(e) => setMonthFilter(e.target.value)}
                 >
                   {new Array(12).fill("").map((_, index) => (
                     <MenuItem value={index + 1}>{index + 1}</MenuItem>
@@ -76,7 +77,7 @@ const Transaction = () => {
                   id="demo-simple-select"
                   value={yearFilter}
                   label="Year"
-                  onChange={(e)=>setYearFilter(e.target.value)}
+                  onChange={(e) => setYearFilter(e.target.value)}
                 >
                   {new Array(5).fill("").map((_, index) => (
                     <MenuItem value={new Date().getFullYear() + index}>
@@ -173,33 +174,72 @@ const Transaction = () => {
             </div>
           </div>
           <div className="pagination mt-4 w-full">
-          <nav aria-label="Page navigation example">
-  <ul className="flex items-center -space-x-px h-10 text-base">
-    <li>
-      <span   className="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-        <button className="sr-only" onClick={handlePrev} disabled={page===0}>Previous</button>
-        <svg className="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-          <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 1 1 5l4 4"/>
-        </svg>
-      </span>
-    </li>
-    {
-        new Array(pageSize).fill('').map((_,i)=>(
-            <li key={i}>
-      <button disabled={pageSize-1===page} onClick={()=>setPage(i)}  className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" >{i+1}</button>
-    </li>
-        ))
-    }
-    <li>
-      <span onClick={handleNext}  className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-        <button onClick={handleNext} className="sr-only">Next</button>
-        <svg className="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-          <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
-        </svg>
-      </span>
-    </li>
-  </ul>
-</nav>
+            <nav aria-label="Page navigation example">
+              <ul className="flex items-center -space-x-px h-10 text-base">
+                <li>
+                  <span className="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                    <button
+                      className="sr-only"
+                      onClick={handlePrev}
+                      disabled={page === 0}
+                    >
+                      Previous
+                    </button>
+                    <svg
+                      className="w-3 h-3 rtl:rotate-180"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 6 10"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 1 1 5l4 4"
+                      />
+                    </svg>
+                  </span>
+                </li>
+                {new Array(pageSize).fill("").map((_, i) => (
+                  <li key={i}>
+                    <button
+                      disabled={pageSize - 1 === page}
+                      onClick={() => handlePage(i)}
+                      className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >
+                      {i + 1}
+                    </button>
+                  </li>
+                ))}
+                <li>
+                  <span
+                    onClick={handleNext}
+                    className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  >
+                    <button onClick={handleNext} className="sr-only">
+                      Next
+                    </button>
+                    <svg
+                      className="w-3 h-3 rtl:rotate-180"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 6 10"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="m1 9 4-4-4-4"
+                      />
+                    </svg>
+                  </span>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
       </div>

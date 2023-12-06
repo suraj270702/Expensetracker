@@ -5,6 +5,11 @@ import { useDispatch } from "react-redux";
 import { decrement } from "../app/features/counter";
 import { Chart as ChartJS,Tooltip,Legend,ArcElement,BarElement,Title,CategoryScale,LinearScale } from "chart.js";
 import { Bar, Doughnut } from 'react-chartjs-2';
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 
 const Dashboard = () => {
@@ -15,6 +20,12 @@ const Dashboard = () => {
   
   const [expenseData,setExpenseData] = useState(storedExpenseData)
   const [ordersData,setOrdersData] = useState(storedOrderData)
+  const [filterExpenseData,setFilterExpenseData] = useState(expenseData)
+  const [filterOrdersData,setFilterOrdersData] = useState(ordersData)
+  const [yearFilter,setYearFilter] = useState(new Date().getFullYear())
+  const [monthFilter,setMonthFilter] = useState(new Date().getMonth()+1)
+
+  
   
   const [profit,setProfit] = useState(0)
   const [totalOrders,setTotalOrders] = useState(0)
@@ -53,14 +64,27 @@ const Dashboard = () => {
   const [amount,setAmount] = useState([])
 
   useEffect(()=>{
-    let profitData = ordersData.reduce((acc,i)=>acc+i.payment,0)
+    let filteredData = ordersData.filter((item)=>item.month === monthFilter && item.year === yearFilter)
+    setFilterOrdersData(filteredData)
+    //console.log(filterOrdersData)
+  },[ordersData,monthFilter,yearFilter])
+
+  useEffect(()=>{
+    let filteredData = expenseData.filter((item)=>item.year===yearFilter && item.year === yearFilter)
+    setFilterExpenseData(filteredData)
+  },[expenseData,yearFilter,monthFilter])
+  
+ console.log(filterExpenseData)
+
+  useEffect(()=>{
+    let profitData = filterOrdersData.reduce((acc,i)=>acc+i.payment,0)
     setProfit(profitData)
-    let totalOrdersData = ordersData.reduce((acc,i)=>acc+parseInt(i.qty),0)
+    let totalOrdersData = filterOrdersData.reduce((acc,i)=>acc+parseInt(i.qty),0)
     setTotalOrders(totalOrdersData)
     let ordersDataByMonths = {
 
     }
-    ordersData.forEach((item)=>{
+    filterOrdersData.forEach((item)=>{
       if(!ordersDataByMonths[item.month]){
         ordersDataByMonths[item.month]=item.payment
       }
@@ -83,13 +107,13 @@ const Dashboard = () => {
     const amountData = [...amountByMonth]
     setAmount(()=>[...amountData])
     console.log(amount)
-  },[ordersData])
+  },[filterOrdersData])
 
   useEffect(()=>{
-    let expenseAmount = expenseData.reduce((acc,i)=>acc+parseInt(i.amount),0)
+    let expenseAmount = filterExpenseData.reduce((acc,i)=>acc+parseInt(i.amount),0)
     setTotalExpenseAmount(expenseAmount)
     const uniqueCategoriesSet = new Set();
-  expenseData.forEach((item) => {
+  filterExpenseData.forEach((item) => {
     uniqueCategoriesSet.add(item.category);
   });
 
@@ -102,7 +126,7 @@ const Dashboard = () => {
   setCategoryData(categoryDataArray)
 
   let categoryExpenseAmount = {}
-  expenseData.forEach((item)=>{
+  filterExpenseData.forEach((item)=>{
     const {amount,category}=item
     if(!categoryExpenseAmount[category]){
       categoryExpenseAmount[category]=amount
@@ -115,7 +139,7 @@ const Dashboard = () => {
   
   setCategoryExpense(aggregatedArray)
 
-  },[expenseData])
+  },[filterExpenseData])
 
   ChartJS.register(
     ArcElement,
@@ -126,7 +150,7 @@ const Dashboard = () => {
   BarElement,
   Title,
   )
-  console.log(month)
+  //console.log(month)
 
   //console.log(categoryExpense)
 
@@ -165,7 +189,7 @@ const Dashboard = () => {
       },
       title: {
         display: true,
-        text: "2023 Orders Chart",
+        text: `${yearFilter} Orders Chart`,
       },
     },
   };
@@ -187,6 +211,42 @@ const Dashboard = () => {
   return (
     <div className="p-3 md:px-2 md:py-10 md:ml-[340px]" onClick={()=>dispatch(decrement())}>
       <div>
+      <div className="w-full md:w-[1080px] flex flex-row justify-between items-center gap-y-4 md:gap-y-0 mt-4 md:mt-0 mb-4">
+            <Box sx={{ minWidth: 120, background: "white" }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Month</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={monthFilter}
+                  label="Month"
+                  onChange={(e)=>setMonthFilter(e.target.value)}
+                >
+                  {new Array(12).fill("").map((_, index) => (
+                    <MenuItem value={index + 1}>{index + 1}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+            <Box sx={{ minWidth: 120, background: "white" }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Year</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={yearFilter}
+                  label="Year"
+                  onChange={(e)=>setYearFilter(e.target.value)}
+                >
+                  {new Array(5).fill("").map((_, index) => (
+                    <MenuItem value={new Date().getFullYear() + index}>
+                      {new Date().getFullYear() + index}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-4">
           <div className=" w-full h-[100px] md:w-[350px] rounded-md md:h-[150px] bg-[white] shadow-md p-4 md:px-6 md:py-4 flex items-center justify-center">
             <div className="flex gap-4 items-center">
