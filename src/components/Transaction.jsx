@@ -64,7 +64,7 @@ const Transaction = () => {
                   onChange={(e) => setMonthFilter(e.target.value)}
                 >
                   {new Array(12).fill("").map((_, index) => (
-                    <MenuItem value={index + 1}>{index + 1}</MenuItem>
+                    <MenuItem value={index + 1} key={index}>{index + 1}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -80,7 +80,7 @@ const Transaction = () => {
                   onChange={(e) => setYearFilter(e.target.value)}
                 >
                   {new Array(5).fill("").map((_, index) => (
-                    <MenuItem value={new Date().getFullYear() + index}>
+                    <MenuItem value={new Date().getFullYear() + index} key={index}>
                       {new Date().getFullYear() + index}
                     </MenuItem>
                   ))}

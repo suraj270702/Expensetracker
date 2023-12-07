@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { add, decrement } from "../app/features/counter";
 
 import Home from "./Home";
-import { Outlet } from "react-router-dom";
+import { Outlet,NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   const [active, setActive] = useState(false);
@@ -16,7 +16,7 @@ const Sidebar = () => {
   const navigation = [
     {
       name: "Dashboard",
-      link: "/",
+      link: "dashboard",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -39,11 +39,11 @@ const Sidebar = () => {
           />
         </svg>
       ),
-      active: true,
+      active: false,
     },
     {
       name: "Orders",
-      link: "/",
+      link: "orders",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +62,7 @@ const Sidebar = () => {
     },
     {
       name: "Transactions",
-      link: "/",
+      link: "transactions",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -81,7 +81,7 @@ const Sidebar = () => {
     },
     {
       name: "Graphs",
-      link: "/",
+      link: "graphs",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -131,15 +131,18 @@ const Sidebar = () => {
               <div className="w-[42px] h-[42px] custom flex items-center justify-center">
                 <div className="w-[18px] h-[18px] bg-[#fff]"></div>
               </div>
+              <NavLink to="/">
               <h1 className="text-[30px] md:text-[34px] font-[600] ">
                 Expense
               </h1>
+              </NavLink>
             </div>
 
             <div className="mt-16 flex flex-col items-start space-y-14">
               {navigation.map((nav, i) => (
-                <div
-                  key={nav.name}
+               <NavLink to={nav.link} key={nav.name}>
+                 <div
+                  
                   className="flex items-center justify-center gap-3   transition ease-in-out duration-300 cursor-pointer"
                 >
                   <div>{nav.icon}</div>
@@ -152,6 +155,7 @@ const Sidebar = () => {
                     {nav.name}
                   </h3>
                 </div>
+               </NavLink>
               ))}
             </div>
           </div>

@@ -24,6 +24,7 @@ const Dashboard = () => {
   const [filterOrdersData,setFilterOrdersData] = useState(ordersData)
   const [yearFilter,setYearFilter] = useState(new Date().getFullYear())
   const [monthFilter,setMonthFilter] = useState(new Date().getMonth()+1)
+  const [barChartFilteredData,setBarCHartFilteredData] = useState(ordersData)
 
   
   
@@ -70,11 +71,18 @@ const Dashboard = () => {
   },[ordersData,monthFilter,yearFilter])
 
   useEffect(()=>{
+    let filteredData = ordersData.filter((item)=>item.year===yearFilter)
+    setBarCHartFilteredData(filteredData)
+  },[ordersData,yearFilter])
+
+  
+
+  useEffect(()=>{
     let filteredData = expenseData.filter((item)=>item.year===yearFilter && item.year === yearFilter)
     setFilterExpenseData(filteredData)
   },[expenseData,yearFilter,monthFilter])
   
- console.log(filterExpenseData)
+ //console.log(filterExpenseData)
 
   useEffect(()=>{
     let profitData = filterOrdersData.reduce((acc,i)=>acc+i.payment,0)
@@ -84,7 +92,7 @@ const Dashboard = () => {
     let ordersDataByMonths = {
 
     }
-    filterOrdersData.forEach((item)=>{
+    barChartFilteredData.forEach((item)=>{
       if(!ordersDataByMonths[item.month]){
         ordersDataByMonths[item.month]=item.payment
       }
@@ -107,7 +115,7 @@ const Dashboard = () => {
     const amountData = [...amountByMonth]
     setAmount(()=>[...amountData])
     console.log(amount)
-  },[filterOrdersData])
+  },[filterOrdersData,barChartFilteredData])
 
   useEffect(()=>{
     let expenseAmount = filterExpenseData.reduce((acc,i)=>acc+parseInt(i.amount),0)
@@ -129,9 +137,9 @@ const Dashboard = () => {
   filterExpenseData.forEach((item)=>{
     const {amount,category}=item
     if(!categoryExpenseAmount[category]){
-      categoryExpenseAmount[category]=amount
+      categoryExpenseAmount[category]=parseInt(amount)
     }else{
-      categoryExpenseAmount[category]+=amount
+      categoryExpenseAmount[category]+=parseInt(amount)
     }
   })
 
@@ -152,7 +160,7 @@ const Dashboard = () => {
   )
   //console.log(month)
 
-  //console.log(categoryExpense)
+  console.log(categoryExpense)
 
    const data = {
     labels: categoryData,
@@ -284,7 +292,7 @@ const Dashboard = () => {
                 />
               </div>
 
-              <h1 className="text-[50px] text-gray-400 font-bold ">&#8377;{totalExpenseAmount}</h1>
+              <h1 className="text-[50px] text-red-600 font-bold ">&#8377;{totalExpenseAmount}</h1>
             </div>
           </div>
           <div className=" w-full h-[100px] md:w-[350px] rounded-md md:h-[150px] bg-[white] shadow-md p-4 md:px-6 md:py-4 flex items-center justify-center">
@@ -297,7 +305,7 @@ const Dashboard = () => {
                 />
               </div>
 
-              <h1 className="text-[50px] text-gray-400 font-bold ">&#8377;{profit - totalExpenseAmount}</h1>
+              <h1 className="text-[50px] text-green-600 font-bold ">&#8377;{profit - totalExpenseAmount}</h1>
             </div>
           </div>
           <div className=" w-full h-full   md:col-span-2 md:row-span-2 rounded-md bg-[white] shadow-md p-2 md:p-6 md:flex md:justify-center md:items-center">
