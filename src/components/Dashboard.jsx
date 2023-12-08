@@ -13,10 +13,20 @@ import Select from "@mui/material/Select";
 
 
 const Dashboard = () => {
-  let initialExpenseData = localStorage.getItem("expensesData")
-  let storedExpenseData = initialExpenseData ? JSON.parse(initialExpenseData) : []
+  let initialExpenseData;
+  let storedExpenseData
+  try {
+    initialExpenseData = localStorage.getItem("expensesData");
+    storedExpenseData = initialExpenseData ? JSON.parse(initialExpenseData) : [];
+  } catch (error) {
+    // Handle any potential errors here
+    console.error("Error accessing or parsing localStorage:", error);
+    storedExpenseData = []; // Set a default value in case of an error
+  }
   let initialOrderData = localStorage.getItem("ordersData")
   let storedOrderData = initialExpenseData ? JSON.parse(initialOrderData) : []
+  
+  
   
   const [expenseData,setExpenseData] = useState(storedExpenseData)
   const [ordersData,setOrdersData] = useState(storedOrderData)
@@ -78,7 +88,7 @@ const Dashboard = () => {
   
 
   useEffect(()=>{
-    let filteredData = expenseData.filter((item)=>item.year===yearFilter && item.year === yearFilter)
+    let filteredData = expenseData.filter((item)=>item.month===monthFilter && item.year === yearFilter)
     setFilterExpenseData(filteredData)
   },[expenseData,yearFilter,monthFilter])
   
